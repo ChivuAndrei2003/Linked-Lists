@@ -34,12 +34,12 @@ class linkedList {
     this.size++;
   }
 
-  size() {
-    console.log(` The list has ${this.size} nodes`);
+  getSize() {
+    return this.size;
   }
 
-  head() {
-    console.log(`${this.head}`);
+  getHead() {
+    return this.head;
   }
 
   tail() {
@@ -49,27 +49,45 @@ class linkedList {
     while (current.next) {
       current = current.next;
     }
-    console.log(current.value);
+    return current;
   }
 
-  at(value) {}
+  at(index) {
+    if (index < 0 || index >= this.size) return null;
+    
+    let current = this.head;
+    for (let i = 0; i < index; i++) {
+      current = current.next;
+    }
+    return current;
+  }
 
   pop() {
+    if (this.size === 0) return null;
+    
+    if (this.size === 1) {
+      const value = this.head.value;
+      this.head = null;
+      this.size--;
+      return value;
+    }
+    
     let current = this.head;
     let previous;
-   
-    if (this.size === 0) return;
-    else {
-      while (current.next != null) {
-        previous = current;
-        current = current.next;
-      }
-      previous.next = null;
+    
+    while (current.next != null) {
+      previous = current;
+      current = current.next;
     }
-    this.size--; 
+    
+    previous.next = null;
+    this.size--;
+    return current.value;
   }
 
-  contains(value) {}
+  contains(value) {
+    return this.find(value) !== null;
+  }
 
   find(value) {
     let current = this.head;
@@ -85,7 +103,23 @@ class linkedList {
     return null;
   }
 
-  toString() {}
+  toString() {
+    if (!this.head) return "null";
+    
+    let result = "";
+    let current = this.head;
+    
+    while (current) {
+      result += `( ${current.value} )`;
+      if (current.next) {
+        result += " -> ";
+      }
+      current = current.next;
+    }
+    
+    result += " -> null";
+    return result;
+  }
 }
 
 const list = new linkedList();
@@ -93,4 +127,20 @@ list.append("dog");
 list.append("cat");
 list.append("kitty");
 
-console.log(list);
+console.log("=== Testing LinkedList Implementation ===");
+console.log("List:", list.toString());
+console.log("Size:", list.getSize());
+console.log("Head:", list.getHead()?.value);
+console.log("Tail:", list.tail()?.value);
+console.log("At index 1:", list.at(1)?.value);
+console.log("Contains 'cat':", list.contains("cat"));
+console.log("Contains 'bird':", list.contains("bird"));
+console.log("Find 'kitty':", list.find("kitty"));
+
+console.log("\n=== Testing pop() ===");
+console.log("Popped:", list.pop());
+console.log("List after pop:", list.toString());
+
+console.log("\n=== Testing prepend ===");
+list.prepend("first");
+console.log("List after prepend 'first':", list.toString());
